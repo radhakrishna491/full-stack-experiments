@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product API Demo</title>
+  <style>
+    body { font-family: Arial; background: #f3f4f6; padding: 20px; }
+    .card { background: white; padding: 20px; margin: 20px; border-radius: 10px; }
+    button { padding: 10px; margin-top: 10px; }
+  </style>
+</head>
+
+<body>
+
+<h1>Experiment 5 - Product CRUD API</h1>
+
+<div class="card">
+  <h2>Add Product</h2>
+  <input id="name" placeholder="Name"><br><br>
+  <input id="price" placeholder="Price"><br><br>
+  <input id="category" placeholder="Category"><br><br>
+  <button onclick="addProduct()">Add Product</button>
+</div>
+
+<div class="card">
+  <h2>Products</h2>
+  <button onclick="getProducts()">Load Products</button>
+  <ul id="list"></ul>
+</div>
+
+<script>
+async function addProduct() {
+  const product = {
+    name: document.getElementById("name").value,
+    price: Number(document.getElementById("price").value),
+    category: document.getElementById("category").value,
+    inStock: true
+  };
+
+  await fetch("http://localhost:3000/products", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(product)
+  });
+
+  alert("Product Added");
+}
+
+async function getProducts() {
+  const res = await fetch("http://localhost:3000/products");
+  const data = await res.json();
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(p => {
+    const li = document.createElement("li");
+    li.innerText = `${p.name} - $${p.price}`;
+    list.appendChild(li);
+  });
+}
+</script>
+
+</body>
+</html>
